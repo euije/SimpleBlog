@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        span {
+            width: 20px;
+            height: 10px;
+            border: 1px solid orange;
+            border-radius: 5px;
+            padding: 2px 2px 2px 2px;
+            margin: 0 2px 0 2px;
+        }
+
+        button {
+            padding: 10px 20px 10px 20px;
+            background-color: orange;
+        }
+    </style>
+</head>
+<body>
+<button id="home">메인으로</button>
+<br/><br/>
+<button id="edit">수정하기</button>
+<h1>제목</h1>
+<div id="title"></div>
+
+<h3>태그</h3>
+<div id="tagList"></div>
+
+<h3>작성자</h3>
+<div id="user"></div>
+<h3>작성일자</h3>
+<div id="createdAt"></div>
+
+<h2>본문</h2>
+<div id="contents"></div>
+
+<script>
+    const pageId = window.location.pathname.split('/')[2];
+
+    document.getElementById("home").addEventListener('click', (e) => {
+        window.location.href = `http://localhost:8080`;
+    })
+    document.getElementById("edit").addEventListener('click', (e) => {
+       window.location.href = `http://localhost:8080/edit/${pageId}`;
+    });
+
+    const fetchPost = () => {
+        axios.get(`/api/post/${pageId}`)
+            .then((res) => res.data)
+            .then((data) => {
+                let postData = data.data;
+
+                let user = document.getElementById("user");
+                let title = document.getElementById("title");
+                let contents = document.getElementById("contents");
+                let createdAt = document.getElementById("createdAt");
+
+                user.innerHTML = postData.user;
+                title.innerHTML = postData.title;
+                contents.innerHTML = postData.contents;
+                createdAt.innerHTML = postData.createdAt;
+            })
+    }
+    const fetchTag = () => {
+        let tagList = document.getElementById("tagList");
+
+        axios.get(`/api/post/${pageId}/tag`)
+            .then((res) => {
+                tagList.innerHTML = "";
+                return res.data;
+            })
+            .then((data) => {
+                let blogTags = data.data;
+                console.log(blogTags);
+                for (let i = 0; i < blogTags.length; i++) {
+                    let tagItem = document.createElement("span");
+
+                    let tag = document.createElement("b");
+                    tag.innerHTML = `${blogTags[i].name}`;
+
+                    tagItem.append(tag);
+                    tagList.appendChild(tagItem);
+                }
+            });
+    };
+    fetchPost();
+    fetchTag();
+</script>
+
+</body>
+</html>

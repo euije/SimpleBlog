@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>SimpleBlog Main</title>
+    <style>
+        div {
+            border: 1px solid orange;
+            border-radius: 5px;
+            margin: 10px 10px 10px 10px;
+        }
+
+        p {
+            margin: 5px 0 5px 0;
+        }
+
+        button {
+            padding: 10px 20px 10px 20px;
+            background-color: orange;
+        }
+
+        span {
+            width: 20px;
+            height: 10px;
+            border: 1px solid orange;
+            border-radius: 5px;
+            padding: 2px 2px 2px 2px;
+            margin: 0 2px 0 2px;
+        }
+    </style>
+</head>
+<body>
+    <h1>태그 목록</h1>
+    <ul id="tagList"></ul>
+    <a href="/upload">
+        <button>블로그 글쓰기</button>
+    </a>
+    <h1>블로그 전체 목록</h1>
+    <ul id="blogList"></ul>
+
+    <script>
+        const fetchTag = () => {
+            let tagList = document.getElementById("tagList");
+
+            axios.get('/api/tag')
+                .then((res) => {
+                    tagList.innerHTML = "";
+                    return res.data;
+                })
+                .then((data) => {
+                    let blogTags = data.data;
+                    console.log(blogTags);
+                    for (let i = 0; i < blogTags.length; i++) {
+                        let tagItem = document.createElement("span");
+
+                        let tag = document.createElement("b");
+                        tag.innerHTML = `${blogTags[i].name} (${blogTags[i].postCount})`;
+
+                        tagItem.append(tag);
+                        tagList.appendChild(tagItem);
+                    }
+                });
+        };
+
+        fetchTag();
+    </script>
+    <script>
+        const fetch = () => {
+            let blogList = document.getElementById("blogList");
+
+            axios.get('/api/post')
+                .then((res) => {
+                    blogList.innerHTML = " ";
+                    return res.data;
+                })
+                .then((data) => {
+                    let blogPosts = data.data;
+
+                    for (let i = 0; i < blogPosts.length; i++) {
+                        let listItem = document.createElement("div");
+
+                        let link = document.createElement("a");
+                        link.setAttribute("href", `/post/${blogPosts[i].id}`);
+
+                        let title = document.createElement("p");
+                        let user = document.createElement("p");
+                        let createdAt = document.createElement("p");
+                        title.innerHTML = blogPosts[i].title;
+                        user.innerHTML = blogPosts[i].user;
+                        createdAt.innerHTML = blogPosts[i].createdAt;
+                        link.append(title);
+                        link.append(user);
+                        link.append(createdAt);
+
+                        let edit = document.createElement("a");
+                        edit.innerHTML = "수정";
+                        edit.setAttribute("href", `/edit/${blogPosts[i].id}`);
+
+                        let del = document.createElement("a")
+                        del.innerHTML = "삭제";
+                        del.addEventListener("click", (e) => {
+                            axios.delete(`/api/post/${blogPosts[i].id}`);
+                            fetch();
+                            fetchTag();
+                        })
+
+                        listItem.append(link);
+                        listItem.append(edit);
+                        listItem.append(del);
+                        blogList.appendChild(listItem);
+                    }
+                });
+        };
+        fetch();
+    </script>
+</body>
+</html>

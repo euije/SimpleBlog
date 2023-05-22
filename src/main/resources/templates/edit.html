@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <style>
+        #contents {
+            width: 800px;
+            height: 400px;
+        }
+
+        button {
+            padding: 10px 20px 10px 20px;
+            background-color: orange;
+        }
+    </style>
+</head>
+<body>
+<h1>게시글 수정</h1>
+<h3>사용자 이름</h3>
+<input id="user" type="text">
+<h3>제목</h3>
+<input id="title" type="text">
+<h3>본문</h3>
+<input id="contents" type="text">
+
+<br/><br/>
+
+<button id="button">게시글 수정하기</button>
+
+<script th:inline="javascript">
+    const fetch = () => {
+
+        const pageId = window.location.pathname.split('/')[2];
+        axios.get(`/api/post/${pageId}`)
+            .then((res) => res.data)
+            .then((data) => {
+                console.log(data.data);
+                document.getElementById("user").value = data.data.user;
+                document.getElementById("title").value = data.data.title;
+                document.getElementById("contents").value = data.data.contents;
+            });
+        let button = document.getElementById("button");
+        button.addEventListener("click", (e) => {
+            let user;
+            let title;
+            let contents;
+
+            new Promise((resolve, reject) => {
+                user = document.getElementById("user").value;
+                title = document.getElementById("title").value;
+                contents = document.getElementById("contents").value;
+
+                resolve("성공");
+            })
+                .then((message) => {
+                    axios.put(`/api/post/${pageId}`, {
+                        title: title,
+                        contents: contents,
+                        user: user
+                    }).then((value) => {
+                        alert("게시물 수정에 성공하였습니다");
+                        window.location.href = "http://localhost:8080";
+                    });
+                });
+        });
+    }
+
+    fetch();
+</script>
+</body>
+</html>
