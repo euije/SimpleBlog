@@ -42,10 +42,10 @@
     const pageId = window.location.pathname.split('/')[2];
 
     document.getElementById("home").addEventListener('click', (e) => {
-        window.location.href = `http://localhost:8080`;
+        window.location.href = `http://${window.location.host}`;
     })
     document.getElementById("edit").addEventListener('click', (e) => {
-       window.location.href = `http://localhost:8080/edit/${pageId}`;
+       window.location.href = `http://${window.location.host}/edit/${pageId}`;
     });
 
     const fetchPost = () => {

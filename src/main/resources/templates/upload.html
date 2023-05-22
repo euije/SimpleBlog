@@ -66,7 +66,7 @@
                 resolve("성공");
             })
                 .then((message) => {
-                    axios.post("/api/post   ", {
+                    axios.post("/api/post", {
                         title: title,
                         contents: contents,
                         user: user,
@@ -76,7 +76,7 @@
                         oldTagIds: oldTagIds
                     }).then((value) => {
                         alert("게시물 업로드에 성공하였습니다");
-                        window.location.href = "http://localhost:8080";
+                        window.location.href = `http://${window.location.host}`;
                     });
                 });
         });
