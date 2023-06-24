@@ -90,8 +90,8 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
       run:
         aws deploy create-deployment 
-        --application-name sopt-server-codedeploy
-        --deployment-group-name sopt-server-codedeploy-group
+        --application-name yello
+        --deployment-group-name yello-group
         --file-exists-behavior OVERWRITE 
-        --s3-location bucket=sopt32-seminar,bundleType=zip,key=sopt_server.zip
+        --s3-location bucket=yello,bundleType=zip,key=sopt_server.zip
         --region ap-northeast-2
