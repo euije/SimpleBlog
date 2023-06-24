@@ -79,6 +79,6 @@ nohup java -jar -Duser.timezone=Asia/Seoul $IDLE_APPLICATION_PATH >> /home/ubunt
 #   sleep 10
 # done
 
-echo "> 스위칭"
-sleep 10
-/home/ubuntu/app/nonstop/switch.sh
+# echo "> 스위칭"
+# sleep 10
+# /home/ubuntu/app/nonstop/switch.sh
